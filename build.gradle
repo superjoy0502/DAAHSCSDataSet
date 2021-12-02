@@ -1,0 +1,30 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'java'
+}
+
+group 'io.github.superjoy0502.daahscsdataset'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.github.superjoy0502.daahscsdataset.Main'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0" //for JVM platform
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
