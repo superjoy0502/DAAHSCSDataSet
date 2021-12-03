@@ -38,26 +38,13 @@ class DataManager {
 
     }
 
-    /* https://stackoverflow.com/questions/44061143/read-csv-line-by-line-in-kotlin */
-    fun printData(inputStream: InputStream) {
+    fun printData(input: Any) {
 
-        loadDataSet(inputStream)
+        var inputStream: InputStream = InputStream.nullInputStream()
 
-        println(provinceState)
-        println(countryRegion)
-        println(lastUpdate)
-        println(confirmed)
-        println(deaths)
-        println(recovered)
-        println(active)
-        println(incidentRate)
-        println(caseFatalityRatio)
-
-    }
-
-    fun printData(file: File) {
-
-        val inputStream: InputStream = FileInputStream(file)
+        if (input !is File && input !is InputStream) return
+        if (input is File) inputStream = FileInputStream(input)
+        else if (input is InputStream) inputStream = input
 
         loadDataSet(inputStream)
 
