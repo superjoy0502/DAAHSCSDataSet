@@ -93,6 +93,16 @@ class DataManager {
 
         }
 
+        provinceState.removeFirstOrNull()
+        countryRegion.removeFirstOrNull()
+        lastUpdate.removeFirstOrNull()
+        confirmed.removeFirstOrNull()
+        deaths.removeFirstOrNull()
+        recovered.removeFirstOrNull()
+        active.removeFirstOrNull()
+        incidentRate.removeFirstOrNull()
+        caseFatalityRatio.removeFirstOrNull()
+
     }
 
 }
