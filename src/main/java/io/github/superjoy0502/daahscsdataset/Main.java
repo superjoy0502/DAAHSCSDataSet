@@ -9,9 +9,11 @@ package io.github.superjoy0502.daahscsdataset;
 
 public class Main {
 
+    public static GUI gui;
+
     public static void main(String[] args) {
 
-        new GUI();
+        gui = new GUI();
 
     }
 

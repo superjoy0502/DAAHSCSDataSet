@@ -9,14 +9,14 @@ package io.github.superjoy0502.daahscsdataset
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
 import javax.swing.JFileChooser
 import kotlin.system.exitProcess
 
 
-class GUIListener(private val gui: GUI): ActionListener {
+class GUIListener(private val gui: GUI): ActionListener, ItemListener {
 
     override fun actionPerformed(e: ActionEvent?) {
 
@@ -26,13 +26,13 @@ class GUIListener(private val gui: GUI): ActionListener {
 
                 "open" -> {
 
-                    gui.fileChooserResult = gui.fileChooser.showOpenDialog(gui.f)
+                    gui.fileChooserResult = gui.fileChooser.showOpenDialog(gui.frame)
                     if (gui.fileChooserResult == JFileChooser.APPROVE_OPTION) {
 
                         val selectedFile: File = gui.fileChooser.selectedFile
                         println("Selected file: ${selectedFile.absolutePath}")
 
-                        gui.dataManager.printData(selectedFile)
+                        gui.dataManager.displayData(selectedFile)
 
                     }
 
@@ -42,6 +42,38 @@ class GUIListener(private val gui: GUI): ActionListener {
             }
 
         }
+    }
+
+    override fun itemStateChanged(e: ItemEvent?) {
+
+        when (e?.itemSelectable) {
+
+            gui.confirmedBox -> {
+
+                gui.confirmedSpinnerMin.isEnabled = !gui.confirmedSpinnerMin.isEnabled
+                gui.confirmedSpinnerMax.isEnabled = !gui.confirmedSpinnerMax.isEnabled
+                gui.dataManager.isConfirmedFilterOn = !gui.dataManager.isConfirmedFilterOn
+
+            }
+
+            gui.deathsBox -> {
+
+                gui.deathsSpinnerMin.isEnabled = !gui.deathsSpinnerMin.isEnabled
+                gui.deathsSpinnerMax.isEnabled = !gui.deathsSpinnerMax.isEnabled
+                gui.dataManager.isDeathsFilterOn = !gui.dataManager.isDeathsFilterOn
+
+            }
+
+            gui.recoveredBox -> {
+
+                gui.recoveredSpinnerMin.isEnabled = !gui.recoveredSpinnerMin.isEnabled
+                gui.recoveredSpinnerMax.isEnabled = !gui.recoveredSpinnerMax.isEnabled
+                gui.dataManager.isRecoveredFilterOn = !gui.dataManager.isRecoveredFilterOn
+
+            }
+
+        }
+
     }
 
 }

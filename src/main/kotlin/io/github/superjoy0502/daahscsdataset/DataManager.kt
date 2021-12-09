@@ -12,9 +12,16 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
+import javax.swing.JTable
+import javax.swing.table.DefaultTableColumnModel
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.TableColumnModel
+import kotlin.reflect.typeOf
 
 /* https://github.com/CSSEGISandData/COVID-19 */
-class DataManager {
+class DataManager(val gui: GUI) {
+
+    var data: ArrayList<Array<Any>> = ArrayList()
 
     val provinceState: ArrayList<String?> = ArrayList()
     val countryRegion: ArrayList<String?> = ArrayList()
@@ -28,9 +35,13 @@ class DataManager {
 
     var fileInputStream: InputStream? = null
 
-    /* https://mkyong.com/java/java-read-a-file-from-resources-folder/ */
+    var isConfirmedFilterOn = false
+    var isDeathsFilterOn = false
+    var isRecoveredFilterOn = false
+
     fun getDataFromResource(fileName: String): InputStream {
 
+        /* https://mkyong.com/java/java-read-a-file-from-resources-folder/ */
         fileInputStream = javaClass.classLoader.getResourceAsStream("csv/$fileName")
 
         return fileInputStream
@@ -60,11 +71,30 @@ class DataManager {
 
     }
 
+    fun displayData(input: Any) {
+
+        var inputStream: InputStream = InputStream.nullInputStream()
+
+        if (input !is File && input !is InputStream) return
+        if (input is File) inputStream = FileInputStream(input)
+        else if (input is InputStream) inputStream = input
+
+        loadDataSet(inputStream)
+
+        val array: Array<Array<Any>> = data.toTypedArray()
+        gui.table = JTable(array, gui.columnNames)
+
+    }
+
     fun loadDataSet(inputStream: InputStream) {
 
         csvReader().open(inputStream) {
 
+            data = ArrayList()
+
             for (row in readAllAsSequence()) {
+
+                data += row.toTypedArray()
 
                 provinceState += row[2]
                 countryRegion += row[3]
