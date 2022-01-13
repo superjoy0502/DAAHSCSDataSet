@@ -12,11 +12,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
-import javax.swing.JTable
-import javax.swing.table.DefaultTableColumnModel
-import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableColumnModel
-import kotlin.reflect.typeOf
 
 /* https://github.com/CSSEGISandData/COVID-19 */
 class DataManager(val gui: GUI) {
@@ -71,22 +66,13 @@ class DataManager(val gui: GUI) {
 
     }
 
-    fun displayData(input: Any) {
+    fun loadDataSet(input: Any) {
 
         var inputStream: InputStream = InputStream.nullInputStream()
 
-        if (input !is File && input !is InputStream) return
+        if (input !is File && input !is InputStream) throw TypeCastException("loadDataSet(input: Any) only accepts InputStream and File as input!")
         if (input is File) inputStream = FileInputStream(input)
         else if (input is InputStream) inputStream = input
-
-        loadDataSet(inputStream)
-
-        val array: Array<Array<Any>> = data.toTypedArray()
-        gui.table = JTable(array, gui.columnNames)
-
-    }
-
-    fun loadDataSet(inputStream: InputStream) {
 
         csvReader().open(inputStream) {
 
@@ -119,6 +105,147 @@ class DataManager(val gui: GUI) {
         active.removeFirstOrNull()
         incidentRate.removeFirstOrNull()
         caseFatalityRatio.removeFirstOrNull()
+
+    }
+
+    fun getSamplefromIntArrayList(arrayList: ArrayList<Int?>, n: Int = 5, bottom: Boolean = false): ArrayList<Int?> {
+
+        val tempList: ArrayList<Int?> = sortIntArrayList(arrayList)
+        if (!bottom) tempList.reverse()
+        val topFiveList: ArrayList<Int?> = ArrayList()
+        for (i in 0 until n) topFiveList.add(tempList[i])
+
+        return topFiveList
+
+    }
+
+    fun sortIntArrayList(arrayList: ArrayList<Int?>): ArrayList<Int?> {
+
+        val finalList: ArrayList<Int?> = arrayList
+        println(finalList)
+
+        for (j in finalList.size - 1 downTo 1) {
+
+            for (i in 0 until j) {
+
+                if (finalList[i]!! > finalList[i + 1]!!) {
+
+                    val t = finalList[i]
+                    finalList[i] = finalList[i + 1]
+                    finalList[i + 1] = t
+
+                }
+
+            }
+
+        }
+
+        println(finalList)
+        return finalList
+
+    }
+
+    fun getAverageIntArrayList(arrayList: ArrayList<Int?>): Double {
+
+        var total = 0.0
+        for (i in arrayList) {
+
+            if (i != null) total += i
+
+        }
+
+        return (total / arrayList.size)
+
+    }
+
+    fun getSamplefromDoubleArrayList(arrayList: ArrayList<Double?>, n: Int = 5, bottom: Boolean = false): ArrayList<Double?> {
+
+        val tempList: ArrayList<Double?> = sortDoubleArrayList(arrayList)
+        if (!bottom) tempList.reverse()
+        val topFiveList: ArrayList<Double?> = ArrayList()
+        for (i in 0 until n) topFiveList.add(tempList[i])
+
+        return topFiveList
+
+    }
+
+    fun sortDoubleArrayList(arrayList: ArrayList<Double?>): ArrayList<Double?> {
+
+        val finalList: ArrayList<Double?> = arrayList
+        println(finalList)
+
+        for (j in finalList.size - 1 downTo 1) {
+
+            for (i in 0 until j) {
+
+                if (finalList[i] == null || finalList[i + 1] == null) continue
+
+                if (finalList[i]!! > finalList[i + 1]!!) {
+
+                    val t = finalList[i]
+                    finalList[i] = finalList[i + 1]
+                    finalList[i + 1] = t
+
+                }
+
+            }
+
+        }
+
+        println(finalList)
+        return finalList
+
+    }
+
+    fun getAverageDoubleArrayList(arrayList: ArrayList<Double?>): Double {
+
+        var total = 0.0
+        for (i in arrayList) {
+
+            if (i != null) total += i
+
+        }
+
+        return (total / arrayList.size)
+
+    }
+
+    fun getCountryIndex(country: String): Int {
+
+        var index = -1
+
+        for (i in 0 until countryRegion.size) {
+
+            if (country.equals(countryRegion[i], true)){
+
+                index = i
+                break
+
+            }
+
+        }
+
+        return index
+
+    }
+
+    fun <E> getDataHigherThan(arrayList: ArrayList<E?>, number: Double): ArrayList<E> {
+
+        val list = ArrayList<E>()
+
+        for (e in arrayList) {
+
+            val ee = e.toString().toDoubleOrNull() ?: continue
+
+            if (ee > number) {
+
+                list += e!!
+
+            }
+
+        }
+
+        return list
 
     }
 

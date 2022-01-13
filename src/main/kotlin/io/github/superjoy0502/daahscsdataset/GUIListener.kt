@@ -30,9 +30,11 @@ class GUIListener(private val gui: GUI): ActionListener, ItemListener {
                     if (gui.fileChooserResult == JFileChooser.APPROVE_OPTION) {
 
                         val selectedFile: File = gui.fileChooser.selectedFile
-                        println("Selected file: ${selectedFile.absolutePath}")
-
-                        gui.dataManager.displayData(selectedFile)
+//                        println("Selected file: ${selectedFile.absolutePath}")
+                        gui.dataManager.loadDataSet(selectedFile)
+//                        println(gui.dataManager.getSamplefromIntArrayList(gui.dataManager.confirmed))
+//                        println(gui.dataManager.getSamplefromDoubleArrayList(gui.dataManager.caseFatalityRatio))
+//                        gui.dataManager.displayData(selectedFile)
 
                     }
 
