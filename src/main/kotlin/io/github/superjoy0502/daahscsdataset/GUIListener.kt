@@ -12,6 +12,7 @@ import java.awt.event.ActionListener
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.io.File
+import java.io.InputStream
 import javax.swing.JFileChooser
 import kotlin.system.exitProcess
 
@@ -40,6 +41,59 @@ class GUIListener(private val gui: GUI): ActionListener, ItemListener {
 
                 }
                 "exit" -> exitProcess(0)
+                "analyze" -> {
+
+                    println("Analyze")
+
+                    if (!gui.dataManager.dataLoaded) {
+
+                        // Update Average Text
+                        gui.avConfirmed.text = "Load a Dataset!"
+                        gui.avDeaths.text = "Load a Dataset!"
+                        gui.avRecovered.text = "Load a Dataset!"
+                        gui.avActive.text = "Load a Dataset!"
+                        gui.avIncidentRate.text = "Load a Dataset!"
+                        gui.avCaseFatality.text = "Load a Dataset!"
+
+                        // Update Sample Text
+                        gui.smConfirmed.text = "Load a Dataset!"
+                        gui.smDeaths.text = "Load a Dataset!"
+                        gui.smRecovered.text = "Load a Dataset!"
+                        gui.smActive.text = "Load a Dataset!"
+                        gui.smIncidentRate.text = "Load a Dataset!"
+                        gui.smCaseFatality.text = "Load a Dataset!"
+
+                    } else {
+
+                        // Update Average Text
+                        gui.avConfirmed.text =
+                            gui.dataManager.getAverageIntArrayList(gui.dataManager.confirmed).toString()
+                        gui.avDeaths.text = gui.dataManager.getAverageIntArrayList(gui.dataManager.deaths).toString()
+                        gui.avRecovered.text =
+                            gui.dataManager.getAverageIntArrayList(gui.dataManager.recovered).toString()
+                        gui.avActive.text = gui.dataManager.getAverageIntArrayList(gui.dataManager.active).toString()
+                        gui.avIncidentRate.text =
+                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.incidentRate).toString()
+                        gui.avCaseFatality.text =
+                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.caseFatalityRatio).toString()
+
+                        // Update Sample Text
+                        gui.smConfirmed.text =
+                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.confirmed).toString()
+                        gui.smDeaths.text =
+                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.deaths).toString()
+                        gui.smRecovered.text =
+                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.recovered).toString()
+                        gui.smActive.text =
+                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.active).toString()
+                        gui.smIncidentRate.text =
+                            gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.incidentRate).toString()
+                        gui.smCaseFatality.text =
+                            gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.caseFatalityRatio).toString()
+
+                    }
+
+                }
 
             }
 
@@ -47,35 +101,7 @@ class GUIListener(private val gui: GUI): ActionListener, ItemListener {
     }
 
     override fun itemStateChanged(e: ItemEvent?) {
-
-        when (e?.itemSelectable) {
-
-            gui.confirmedBox -> {
-
-                gui.confirmedSpinnerMin.isEnabled = !gui.confirmedSpinnerMin.isEnabled
-                gui.confirmedSpinnerMax.isEnabled = !gui.confirmedSpinnerMax.isEnabled
-                gui.dataManager.isConfirmedFilterOn = !gui.dataManager.isConfirmedFilterOn
-
-            }
-
-            gui.deathsBox -> {
-
-                gui.deathsSpinnerMin.isEnabled = !gui.deathsSpinnerMin.isEnabled
-                gui.deathsSpinnerMax.isEnabled = !gui.deathsSpinnerMax.isEnabled
-                gui.dataManager.isDeathsFilterOn = !gui.dataManager.isDeathsFilterOn
-
-            }
-
-            gui.recoveredBox -> {
-
-                gui.recoveredSpinnerMin.isEnabled = !gui.recoveredSpinnerMin.isEnabled
-                gui.recoveredSpinnerMax.isEnabled = !gui.recoveredSpinnerMax.isEnabled
-                gui.dataManager.isRecoveredFilterOn = !gui.dataManager.isRecoveredFilterOn
-
-            }
-
-        }
-
+        TODO("Not yet implemented")
     }
 
 }

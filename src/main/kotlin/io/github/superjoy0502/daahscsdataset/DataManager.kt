@@ -17,7 +17,7 @@ import java.io.InputStream
 class DataManager(val gui: GUI) {
 
     var data: ArrayList<Array<Any>> = ArrayList()
-
+    var dataLoaded = false
     val provinceState: ArrayList<String?> = ArrayList()
     val countryRegion: ArrayList<String?> = ArrayList()
     val lastUpdate: ArrayList<String?> = ArrayList()
@@ -106,6 +106,8 @@ class DataManager(val gui: GUI) {
         incidentRate.removeFirstOrNull()
         caseFatalityRatio.removeFirstOrNull()
 
+        dataLoaded = true
+
     }
 
     fun getSamplefromIntArrayList(arrayList: ArrayList<Int?>, n: Int = 5, bottom: Boolean = false): ArrayList<Int?> {
@@ -119,20 +121,53 @@ class DataManager(val gui: GUI) {
 
     }
 
+    fun getCountriesOfIntSamples(arrayList: ArrayList<Int?>): ArrayList<String> {
+
+        val countriesList = ArrayList<String>()
+        val sampleList = getSamplefromIntArrayList(arrayList)
+
+        for (s in sampleList) {
+
+            for (i in 0 until arrayList.size) {
+
+                var isCountryAlreadyIn = false
+
+                if (s == arrayList[i]) {
+
+                    if (countryRegion[i] != null) {
+                        for (c in countriesList) {
+                            if (c == countryRegion[i]!!) isCountryAlreadyIn = true
+                        }
+                        if (!isCountryAlreadyIn && countriesList.size <= 5) countriesList.add(countryRegion[i]!!)
+                    }
+
+                }
+
+            }
+        }
+
+        return countriesList
+
+    }
+
     fun sortIntArrayList(arrayList: ArrayList<Int?>): ArrayList<Int?> {
 
         val finalList: ArrayList<Int?> = arrayList
-        println(finalList)
+//        println(finalList)
 
         for (j in finalList.size - 1 downTo 1) {
 
             for (i in 0 until j) {
 
-                if (finalList[i]!! > finalList[i + 1]!!) {
+                if (finalList[i] != null && finalList[i + 1] != null){
 
-                    val t = finalList[i]
-                    finalList[i] = finalList[i + 1]
-                    finalList[i + 1] = t
+                    if (finalList[i]!! > finalList[i + 1]!!) {
+
+                        val t = finalList[i]
+                        finalList[i] = finalList[i + 1]
+                        finalList[i + 1] = t
+
+                    }
 
                 }
 
@@ -140,7 +175,7 @@ class DataManager(val gui: GUI) {
 
         }
 
-        println(finalList)
+//        println(finalList)
         return finalList
 
     }
@@ -148,13 +183,18 @@ class DataManager(val gui: GUI) {
     fun getAverageIntArrayList(arrayList: ArrayList<Int?>): Double {
 
         var total = 0.0
+        var size = arrayList.size
         for (i in arrayList) {
 
-            if (i != null) total += i
+            if (i != null) {
+                total += i
+            } else {
+                size--
+            }
 
         }
 
-        return (total / arrayList.size)
+        return (total / size)
 
     }
 
@@ -169,10 +209,39 @@ class DataManager(val gui: GUI) {
 
     }
 
+    fun getCountriesOfDoubleSamples(arrayList: ArrayList<Double?>): ArrayList<String> {
+
+        val countriesList = ArrayList<String>()
+        val sampleList = getSamplefromDoubleArrayList(arrayList)
+
+        for (s in sampleList) {
+
+            for (i in 0 until arrayList.size) {
+
+                var isCountryAlreadyIn = false
+
+                if (s == arrayList[i]) {
+
+                    if (countryRegion[i] != null) {
+                        for (c in countriesList) {
+                            if (c == countryRegion[i]!!) isCountryAlreadyIn = true
+                        }
+                        if (!isCountryAlreadyIn && countriesList.size <= 5) countriesList.add(countryRegion[i]!!)
+                    }
+
+                }
+
+            }
+        }
+
+        return countriesList
+
+    }
+
     fun sortDoubleArrayList(arrayList: ArrayList<Double?>): ArrayList<Double?> {
 
         val finalList: ArrayList<Double?> = arrayList
-        println(finalList)
+//        println(finalList)
 
         for (j in finalList.size - 1 downTo 1) {
 
@@ -192,7 +261,7 @@ class DataManager(val gui: GUI) {
 
         }
 
-        println(finalList)
+//        println(finalList)
         return finalList
 
     }
@@ -200,13 +269,18 @@ class DataManager(val gui: GUI) {
     fun getAverageDoubleArrayList(arrayList: ArrayList<Double?>): Double {
 
         var total = 0.0
+        var size = arrayList.size
         for (i in arrayList) {
 
-            if (i != null) total += i
+            if (i != null) {
+                total += i
+            } else {
+                size--
+            }
 
         }
 
-        return (total / arrayList.size)
+        return (total / size)
 
     }
 

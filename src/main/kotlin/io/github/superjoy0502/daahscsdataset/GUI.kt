@@ -13,6 +13,7 @@ import java.awt.GridBagLayout
 import java.awt.Insets
 import java.awt.event.KeyEvent
 import java.io.File
+import java.security.Key
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
@@ -22,29 +23,27 @@ import javax.swing.table.TableModel
 class GUI {
 
     var frame: JFrame
-    var menuBar: JMenuBar = JMenuBar()
-    var menu: JMenu = JMenu()
-    var menuItem: JMenuItem = JMenuItem()
-    var fileChooser = JFileChooser()
-    var label: JLabel = JLabel()
-    var confirmedBox: JCheckBox = JCheckBox()
-    var deathsBox: JCheckBox = JCheckBox()
-    var recoveredBox: JCheckBox = JCheckBox()
-    var confirmedMinModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var deathsMinModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var recoveredMinModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var confirmedMaxModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var deathsMaxModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var recoveredMaxModel: SpinnerModel = SpinnerNumberModel(0, 0, 1000000000, 1)
-    var confirmedSpinnerMin = JSpinner()
-    var deathsSpinnerMin = JSpinner()
-    var recoveredSpinnerMin = JSpinner()
-    var confirmedSpinnerMax = JSpinner()
-    var deathsSpinnerMax = JSpinner()
-    var recoveredSpinnerMax = JSpinner()
-    var filterPanel: JPanel = JPanel()
-    var tablePanel: JScrollPane = JScrollPane()
-    var table: JTable = JTable()
+    lateinit var menuBar: JMenuBar
+    lateinit var menu: JMenu
+    lateinit var menuItem: JMenuItem
+    lateinit var fileChooser: JFileChooser
+    lateinit var label: JLabel
+    lateinit var avConfirmed: JLabel
+    lateinit var avDeaths: JLabel
+    lateinit var avRecovered: JLabel
+    lateinit var avActive: JLabel
+    lateinit var avIncidentRate: JLabel
+    lateinit var avCaseFatality: JLabel
+    lateinit var smConfirmed: JLabel
+    lateinit var smDeaths: JLabel
+    lateinit var smRecovered: JLabel
+    lateinit var smActive: JLabel
+    lateinit var smIncidentRate: JLabel
+    lateinit var smCaseFatality: JLabel
+    lateinit var textBox: JTextField
+    lateinit var button: JButton
+    lateinit var filterPanel: JPanel
+    lateinit var mainPanel: JPanel
     val columnNames: Array<String> = arrayOf(
         "Province",
         "Country",
@@ -69,13 +68,15 @@ class GUI {
 
         frame = JFrame("DAAHS COVID-19 Dataset Analyzer")
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        mainPanel = JPanel()
+        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.Y_AXIS)
 
         setupMenu()
         setupFilterPanel()
 
-        table = JTable()
-        tablePanel = JScrollPane(table)
-        frame.add(tablePanel)
+        frame.add(mainPanel)
+
+        frame.pack()
 
         frame.setSize(960, 540)
         frame.setLocationRelativeTo(null)
@@ -116,90 +117,134 @@ class GUI {
     private fun setupFilterPanel() {
 
         filterPanel = JPanel(GridBagLayout())
-        filterPanel.preferredSize = Dimension(192, 540)
+        filterPanel.preferredSize = Dimension(192, 270)
         val constraints: GridBagConstraints = GridBagConstraints()
         constraints.anchor = GridBagConstraints.WEST
         constraints.insets = Insets(10, 10, 10, 10)
         //        p.layout = BoxLayout(p, BoxLayout.PAGE_AXIS)
 
-        confirmedBox = JCheckBox("Confirmed")
-        confirmedBox.mnemonic = KeyEvent.VK_C
-        confirmedBox.isSelected = false
-        confirmedBox.addItemListener(listener)
+        button = JButton("Analyze Data")
+        button.actionCommand = "analyze"
+        button.mnemonic = KeyEvent.VK_A
+        button.addActionListener(listener)
         constraints.gridx = 0
         constraints.gridy = 0
-        filterPanel.add(confirmedBox, constraints)
+        filterPanel.add(button, constraints)
 
+        label = JLabel("Average of: ")
         constraints.gridx = 1
         constraints.gridy = 0
-        confirmedSpinnerMin = JSpinner(confirmedMinModel)
-        confirmedSpinnerMin.isEnabled = false
-        filterPanel.add(confirmedSpinnerMin, constraints)
-
+        filterPanel.add(label, constraints)
+        label = JLabel("5 Countries with the most:")
         constraints.gridx = 2
         constraints.gridy = 0
-        label = JLabel("~")
         filterPanel.add(label, constraints)
-
-        constraints.gridx = 3
-        constraints.gridy = 0
-        confirmedSpinnerMax = JSpinner(confirmedMaxModel)
-        confirmedSpinnerMax.isEnabled = false
-        filterPanel.add(confirmedSpinnerMax, constraints)
-
-        deathsBox = JCheckBox("Deaths")
-        deathsBox.mnemonic = KeyEvent.VK_D
-        deathsBox.isSelected = false
-        deathsBox.addItemListener(listener)
+        label = JLabel("Confirmed Cases")
         constraints.gridx = 0
         constraints.gridy = 1
-        filterPanel.add(deathsBox, constraints)
-
-        constraints.gridx = 1
-        constraints.gridy = 1
-        deathsSpinnerMin = JSpinner(deathsMinModel)
-        deathsSpinnerMin.isEnabled = false
-        filterPanel.add(deathsSpinnerMin, constraints)
-
-        constraints.gridx = 2
-        constraints.gridy = 1
-        label = JLabel("~")
         filterPanel.add(label, constraints)
-
-        constraints.gridx = 3
-        constraints.gridy = 1
-        deathsSpinnerMax = JSpinner(deathsMaxModel)
-        deathsSpinnerMax.isEnabled = false
-        filterPanel.add(deathsSpinnerMax, constraints)
-
-        recoveredBox = JCheckBox("Recovered")
-        recoveredBox.mnemonic = KeyEvent.VK_R
-        recoveredBox.isSelected = false
-        recoveredBox.addItemListener(listener)
+        label = JLabel("Deaths")
         constraints.gridx = 0
         constraints.gridy = 2
-        filterPanel.add(recoveredBox, constraints)
-
+        filterPanel.add(label, constraints)
+        label = JLabel("Recovered")
+        constraints.gridx = 0
+        constraints.gridy = 3
+        filterPanel.add(label, constraints)
+        label = JLabel("Active Cases")
+        constraints.gridx = 0
+        constraints.gridy = 4
+        filterPanel.add(label, constraints)
+        label = JLabel("Incident Rate")
+        constraints.gridx = 0
+        constraints.gridy = 5
+        filterPanel.add(label, constraints)
+        label = JLabel("Fatality Ratio")
+        constraints.gridx = 0
+        constraints.gridy = 6
+        filterPanel.add(label, constraints)
+        avConfirmed = JLabel()
+        constraints.gridx = 1
+        constraints.gridy = 1
+        filterPanel.add(avConfirmed, constraints)
+        avDeaths = JLabel()
         constraints.gridx = 1
         constraints.gridy = 2
-        recoveredSpinnerMin = JSpinner(recoveredMinModel)
-        recoveredSpinnerMin.isEnabled = false
-        filterPanel.add(recoveredSpinnerMin, constraints)
+        filterPanel.add(avDeaths, constraints)
+        avRecovered = JLabel()
+        constraints.gridx = 1
+        constraints.gridy = 3
+        filterPanel.add(avRecovered, constraints)
+        avActive = JLabel()
+        constraints.gridx = 1
+        constraints.gridy = 4
+        filterPanel.add(avActive, constraints)
+        avIncidentRate = JLabel()
+        constraints.gridx = 1
+        constraints.gridy = 5
+        filterPanel.add(avIncidentRate, constraints)
+        avCaseFatality = JLabel()
+        constraints.gridx = 1
+        constraints.gridy = 6
+        filterPanel.add(avCaseFatality, constraints)
 
+        smConfirmed = JLabel()
+        constraints.gridx = 2
+        constraints.gridy = 1
+        filterPanel.add(smConfirmed, constraints)
+        smDeaths = JLabel()
         constraints.gridx = 2
         constraints.gridy = 2
-        label = JLabel("~")
+        filterPanel.add(smDeaths, constraints)
+        smRecovered = JLabel()
+        constraints.gridx = 2
+        constraints.gridy = 3
+        filterPanel.add(smRecovered, constraints)
+        smActive = JLabel()
+        constraints.gridx = 2
+        constraints.gridy = 4
+        filterPanel.add(smActive, constraints)
+        smIncidentRate = JLabel()
+        constraints.gridx = 2
+        constraints.gridy = 5
+        filterPanel.add(smIncidentRate, constraints)
+        smCaseFatality = JLabel()
+        constraints.gridx = 2
+        constraints.gridy = 6
+        filterPanel.add(smCaseFatality, constraints)
+
+        filterPanel.border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General")
+
+        mainPanel.add(filterPanel)
+
+        filterPanel = JPanel(GridBagLayout())
+        filterPanel.preferredSize = Dimension(192, 270)
+
+        label = JLabel("Country:")
+        constraints.gridx = 0
+        constraints.gridy = 0
         filterPanel.add(label, constraints)
 
-        constraints.gridx = 3
-        constraints.gridy = 2
-        recoveredSpinnerMax = JSpinner(recoveredMaxModel)
-        recoveredSpinnerMax.isEnabled = false
-        filterPanel.add(recoveredSpinnerMax, constraints)
+        textBox = JTextField()
+        textBox.minimumSize = textBox.preferredSize
+        constraints.gridx = 1
+        constraints.gridy = 0
+        constraints.weightx = 1.0
+        constraints.fill = GridBagConstraints.HORIZONTAL
+        filterPanel.add(textBox, constraints)
+        constraints.weightx = 0.0
 
-        filterPanel.border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Filters")
+        button = JButton("Analyze Country")
+        button.actionCommand = "analyzeCountry"
+        button.mnemonic = KeyEvent.VK_C
+        button.addActionListener(listener)
+        constraints.gridx = 2
+        constraints.gridy = 0
+        filterPanel.add(button, constraints)
 
-        frame.add(filterPanel)
+        filterPanel.border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Country")
+
+        mainPanel.add(filterPanel)
 
     }
 
