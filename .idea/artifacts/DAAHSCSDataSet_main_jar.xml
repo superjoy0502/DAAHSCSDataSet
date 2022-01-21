@@ -2,9 +2,6 @@
   <artifact type="jar" name="DAAHSCSDataSet.main:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/DAAHSCSDataSet_main_jar</output-path>
     <root id="archive" name="DAAHSCSDataSet.main.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
-      </element>
       <element id="module-output" name="DAAHSCSDataSet.main" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.doyaaaaaken/kotlin-csv-jvm/1.2.0/a8b0fd3617020961b984d46b1003effa5b75c2ad/kotlin-csv-jvm-1.2.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.5.31/ff5d99aecd328872494e8921b72bf6e3af97af3e/kotlin-stdlib-jdk8-1.5.31.jar" path-in-jar="/" />
