@@ -13,11 +13,8 @@ import java.awt.GridBagLayout
 import java.awt.Insets
 import java.awt.event.KeyEvent
 import java.io.File
-import java.security.Key
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
-import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
 
 
 class GUI {
@@ -40,7 +37,13 @@ class GUI {
     lateinit var smActive: JLabel
     lateinit var smIncidentRate: JLabel
     lateinit var smCaseFatality: JLabel
-    lateinit var textBox: JTextField
+    lateinit var cnConfirmed: JLabel
+    lateinit var cnDeaths: JLabel
+    lateinit var cnRecovered: JLabel
+    lateinit var cnActive: JLabel
+    lateinit var cnIncidentRate: JLabel
+    lateinit var cnCaseFatality: JLabel
+    lateinit var countrySearchBox: JTextField
     lateinit var button: JButton
     lateinit var filterPanel: JPanel
     lateinit var mainPanel: JPanel
@@ -78,7 +81,7 @@ class GUI {
 
         frame.pack()
 
-        frame.setSize(960, 540)
+        frame.setSize(960, 810)
         frame.setLocationRelativeTo(null)
 
         frame.jMenuBar = menuBar
@@ -117,7 +120,7 @@ class GUI {
     private fun setupFilterPanel() {
 
         filterPanel = JPanel(GridBagLayout())
-        filterPanel.preferredSize = Dimension(192, 270)
+        filterPanel.preferredSize = Dimension(192, 405)
         val constraints: GridBagConstraints = GridBagConstraints()
         constraints.anchor = GridBagConstraints.WEST
         constraints.insets = Insets(10, 10, 10, 10)
@@ -218,20 +221,20 @@ class GUI {
         mainPanel.add(filterPanel)
 
         filterPanel = JPanel(GridBagLayout())
-        filterPanel.preferredSize = Dimension(192, 270)
+        filterPanel.preferredSize = Dimension(192, 405)
 
         label = JLabel("Country:")
         constraints.gridx = 0
         constraints.gridy = 0
         filterPanel.add(label, constraints)
 
-        textBox = JTextField()
-        textBox.minimumSize = textBox.preferredSize
+        countrySearchBox = JTextField()
+        countrySearchBox.minimumSize = countrySearchBox.preferredSize
         constraints.gridx = 1
         constraints.gridy = 0
         constraints.weightx = 1.0
         constraints.fill = GridBagConstraints.HORIZONTAL
-        filterPanel.add(textBox, constraints)
+        filterPanel.add(countrySearchBox, constraints)
         constraints.weightx = 0.0
 
         button = JButton("Analyze Country")
@@ -241,6 +244,31 @@ class GUI {
         constraints.gridx = 2
         constraints.gridy = 0
         filterPanel.add(button, constraints)
+
+        cnConfirmed = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 1
+        filterPanel.add(cnConfirmed, constraints)
+        cnDeaths = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 2
+        filterPanel.add(cnDeaths, constraints)
+        cnRecovered = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 3
+        filterPanel.add(cnRecovered, constraints)
+        cnActive = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 4
+        filterPanel.add(cnActive, constraints)
+        cnIncidentRate = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 5
+        filterPanel.add(cnIncidentRate, constraints)
+        cnCaseFatality = JLabel()
+        constraints.gridx = 0
+        constraints.gridy = 6
+        filterPanel.add(cnCaseFatality, constraints)
 
         filterPanel.border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Country")
 

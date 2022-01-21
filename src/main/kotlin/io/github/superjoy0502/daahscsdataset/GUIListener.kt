@@ -68,28 +68,67 @@ class GUIListener(private val gui: GUI): ActionListener, ItemListener {
                         // Update Average Text
                         gui.avConfirmed.text =
                             gui.dataManager.getAverageIntArrayList(gui.dataManager.confirmed).toString()
-                        gui.avDeaths.text = gui.dataManager.getAverageIntArrayList(gui.dataManager.deaths).toString()
+                        gui.avDeaths.text =
+                            gui.dataManager.getAverageIntArrayList(gui.dataManager.deaths).toString()
                         gui.avRecovered.text =
                             gui.dataManager.getAverageIntArrayList(gui.dataManager.recovered).toString()
-                        gui.avActive.text = gui.dataManager.getAverageIntArrayList(gui.dataManager.active).toString()
+                        gui.avActive.text =
+                            gui.dataManager.getAverageIntArrayList(gui.dataManager.active).toString()
                         gui.avIncidentRate.text =
-                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.incidentRate).toString()
+                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.incidentRate).toString() + " cases per 100,000"
                         gui.avCaseFatality.text =
-                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.caseFatalityRatio).toString()
+                            gui.dataManager.getAverageDoubleArrayList(gui.dataManager.caseFatalityRatio).toString() + "%"
 
                         // Update Sample Text
                         gui.smConfirmed.text =
-                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.confirmed).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfIntSamples(gui.dataManager.confirmed)
+                            )
                         gui.smDeaths.text =
-                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.deaths).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfIntSamples(gui.dataManager.deaths)
+                            )
                         gui.smRecovered.text =
-                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.recovered).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfIntSamples(gui.dataManager.recovered)
+                            )
                         gui.smActive.text =
-                            gui.dataManager.getCountriesOfIntSamples(gui.dataManager.active).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfIntSamples(gui.dataManager.active)
+                            )
                         gui.smIncidentRate.text =
-                            gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.incidentRate).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.incidentRate)
+                            )
                         gui.smCaseFatality.text =
-                            gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.caseFatalityRatio).toString()
+                            gui.dataManager.switchStringArrayListToString(
+                                gui.dataManager.getCountriesOfDoubleSamples(gui.dataManager.caseFatalityRatio)
+                            )
+
+                    }
+
+                }
+                "analyzeCountry" -> {
+
+                    val i = gui.dataManager.getCountryIndex(gui.countrySearchBox.text)
+                    if (i == -1) {
+
+                        gui.cnConfirmed.text = "That country does not exist!"
+                        gui.cnDeaths.text = ""
+                        gui.cnRecovered.text = ""
+                        gui.cnActive.text = ""
+                        gui.cnIncidentRate.text = ""
+                        gui.cnCaseFatality.text = ""
+
+                    }
+                    else {
+
+                        gui.cnConfirmed.text = "Confirmed: ${gui.dataManager.confirmed[i]}"
+                        gui.cnDeaths.text = "Deaths: ${gui.dataManager.deaths[i]}"
+                        gui.cnRecovered.text = "Recovered: ${gui.dataManager.recovered[i]}"
+                        gui.cnActive.text = "Active: ${gui.dataManager.active[i]}"
+                        gui.cnIncidentRate.text = "Incident Rate: ${gui.dataManager.incidentRate[i]} cases per 100,000"
+                        gui.cnCaseFatality.text = "Fatality Ratio: ${gui.dataManager.caseFatalityRatio[i]}%"
 
                     }
 

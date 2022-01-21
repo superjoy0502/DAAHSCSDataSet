@@ -110,40 +110,48 @@ class DataManager(val gui: GUI) {
 
     }
 
-    fun getSamplefromIntArrayList(arrayList: ArrayList<Int?>, n: Int = 5, bottom: Boolean = false): ArrayList<Int?> {
+    fun getSamplefromIntArrayList(arrayList: ArrayList<Int?>, n: Int = 5, bottom: Boolean = false): ArrayList<Int> {
+
+        var counter = n
 
         val tempList: ArrayList<Int?> = sortIntArrayList(arrayList)
-        if (!bottom) tempList.reverse()
-        val topFiveList: ArrayList<Int?> = ArrayList()
-        for (i in 0 until n) topFiveList.add(tempList[i])
+//        println("size: ${tempList.size}")
+        if (bottom) tempList.reverse()
+        val topFiveList: ArrayList<Int> = ArrayList()
+        for (i in 0 until counter) {
+            if (counter == tempList.size) {
+                return arrayListOf(-1)
+            }
+//            println("count: $i")
+            if (tempList[i] != null) {
+                topFiveList.add(tempList[i]!!)
+            }
+            else counter++
+        }
 
+//        println(topFiveList)
         return topFiveList
 
     }
 
     fun getCountriesOfIntSamples(arrayList: ArrayList<Int?>): ArrayList<String> {
 
+//        println("cc $arrayList")
+
         val countriesList = ArrayList<String>()
         val sampleList = getSamplefromIntArrayList(arrayList)
 
         for (s in sampleList) {
 
-            for (i in 0 until arrayList.size) {
+            val i = getIntegerIndex(arrayList, s)
+            if (i == -1) continue
+//            println(i)
+            if (i < countryRegion.size) countryRegion[i]?.let { countriesList.add(it) }
 
-                var isCountryAlreadyIn = false
+        }
 
-                if (s == arrayList[i]) {
-
-                    if (countryRegion[i] != null) {
-                        for (c in countriesList) {
-                            if (c == countryRegion[i]!!) isCountryAlreadyIn = true
-                        }
-                        if (!isCountryAlreadyIn && countriesList.size <= 5) countriesList.add(countryRegion[i]!!)
-                    }
-
-                }
-
-            }
+        if (countriesList == ArrayList<String>()) {
+            countriesList.add("A problem has occurred in the Dataset")
         }
 
         return countriesList
@@ -152,8 +160,9 @@ class DataManager(val gui: GUI) {
 
     fun sortIntArrayList(arrayList: ArrayList<Int?>): ArrayList<Int?> {
 
-        val finalList: ArrayList<Int?> = arrayList
-//        println(finalList)
+        val finalList: ArrayList<Int?> = ArrayList()
+        finalList.addAll(arrayList)
+//        println("$finalList")
 
         for (j in finalList.size - 1 downTo 1) {
 
@@ -176,6 +185,7 @@ class DataManager(val gui: GUI) {
         }
 
 //        println(finalList)
+        finalList.reverse()
         return finalList
 
     }
@@ -198,40 +208,48 @@ class DataManager(val gui: GUI) {
 
     }
 
-    fun getSamplefromDoubleArrayList(arrayList: ArrayList<Double?>, n: Int = 5, bottom: Boolean = false): ArrayList<Double?> {
+    fun getSamplefromDoubleArrayList(arrayList: ArrayList<Double?>, n: Int = 5, bottom: Boolean = false): ArrayList<Double> {
+
+        var counter = n
 
         val tempList: ArrayList<Double?> = sortDoubleArrayList(arrayList)
-        if (!bottom) tempList.reverse()
-        val topFiveList: ArrayList<Double?> = ArrayList()
-        for (i in 0 until n) topFiveList.add(tempList[i])
+//        println("size: ${tempList.size}")
+        if (bottom) tempList.reverse()
+        val topFiveList: ArrayList<Double> = ArrayList()
+        for (i in 0 until counter) {
+            if (counter == tempList.size) {
+                return arrayListOf(-1.0)
+            }
+//            println("count: $i")
+            if (tempList[i] != null) {
+                topFiveList.add(tempList[i]!!)
+            }
+            else counter++
+        }
 
+//        println(topFiveList)
         return topFiveList
 
     }
 
     fun getCountriesOfDoubleSamples(arrayList: ArrayList<Double?>): ArrayList<String> {
 
+//        println("cc $arrayList")
+
         val countriesList = ArrayList<String>()
         val sampleList = getSamplefromDoubleArrayList(arrayList)
 
         for (s in sampleList) {
 
-            for (i in 0 until arrayList.size) {
+            val i = getDoubleIndex(arrayList, s)
+            if (i == -1) continue
+//            println(i)
+            if (i < countryRegion.size) countryRegion[i]?.let { countriesList.add(it) }
 
-                var isCountryAlreadyIn = false
+        }
 
-                if (s == arrayList[i]) {
-
-                    if (countryRegion[i] != null) {
-                        for (c in countriesList) {
-                            if (c == countryRegion[i]!!) isCountryAlreadyIn = true
-                        }
-                        if (!isCountryAlreadyIn && countriesList.size <= 5) countriesList.add(countryRegion[i]!!)
-                    }
-
-                }
-
-            }
+        if (countriesList == ArrayList<String>()) {
+            countriesList.add("A problem has occurred in the Dataset")
         }
 
         return countriesList
@@ -240,20 +258,23 @@ class DataManager(val gui: GUI) {
 
     fun sortDoubleArrayList(arrayList: ArrayList<Double?>): ArrayList<Double?> {
 
-        val finalList: ArrayList<Double?> = arrayList
-//        println(finalList)
+        val finalList: ArrayList<Double?> = ArrayList()
+        finalList.addAll(arrayList)
+//        println("$finalList")
 
         for (j in finalList.size - 1 downTo 1) {
 
             for (i in 0 until j) {
 
-                if (finalList[i] == null || finalList[i + 1] == null) continue
+                if (finalList[i] != null && finalList[i + 1] != null){
 
-                if (finalList[i]!! > finalList[i + 1]!!) {
+                    if (finalList[i]!! > finalList[i + 1]!!) {
 
-                    val t = finalList[i]
-                    finalList[i] = finalList[i + 1]
-                    finalList[i + 1] = t
+                        val t = finalList[i]
+                        finalList[i] = finalList[i + 1]
+                        finalList[i + 1] = t
+
+                    }
 
                 }
 
@@ -262,6 +283,7 @@ class DataManager(val gui: GUI) {
         }
 
 //        println(finalList)
+        finalList.reverse()
         return finalList
 
     }
@@ -303,23 +325,58 @@ class DataManager(val gui: GUI) {
 
     }
 
-    fun <E> getDataHigherThan(arrayList: ArrayList<E?>, number: Double): ArrayList<E> {
+    fun getIntegerIndex(arrayList: ArrayList<Int?>, number: Int): Int {
 
-        val list = ArrayList<E>()
+        var index = -1
 
-        for (e in arrayList) {
+        for (i in 0 until arrayList.size) {
 
-            val ee = e.toString().toDoubleOrNull() ?: continue
+            if (number == arrayList[i]){
 
-            if (ee > number) {
+                index = i
+                break
 
-                list += e!!
+            }
+
+        }
+//        println(number)
+//        println(arrayList)
+
+        return index
+
+    }
+
+    fun getDoubleIndex(arrayList: ArrayList<Double?>, number: Double): Int {
+
+        var index = -1
+
+        for (i in 0 until arrayList.size) {
+
+            if (number == arrayList[i]){
+
+                index = i
+                break
 
             }
 
         }
 
-        return list
+        return index
+
+    }
+
+    fun switchStringArrayListToString(arrayList: ArrayList<String>): String {
+
+        var str = ""
+
+        for (e in arrayList) {
+
+            str += if (e == arrayList[arrayList.size - 1]) "$e"
+            else "${e}, "
+
+        }
+
+        return str
 
     }
 
